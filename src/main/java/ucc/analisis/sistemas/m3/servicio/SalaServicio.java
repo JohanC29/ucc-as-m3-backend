@@ -11,6 +11,7 @@ import ucc.analisis.sistemas.m3.dto.response.InvitadoDto;
 import ucc.analisis.sistemas.m3.dto.response.ObjectResponse;
 import ucc.analisis.sistemas.m3.interfaz.SalaInterfaz;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,7 +60,16 @@ public class SalaServicio implements SalaInterfaz {
     @Override
     public ObjectResponse<SalaEntidad> getSalaDisponible() {
         ObjectResponse<SalaEntidad> objectResponse = new ObjectResponse<>();
-        List<SalaEntidad> salaEntidadList = salaRepositorio.getSalaDisponible();
+        List<SalaEntidad> salaEntidadList = salaRepositorio.getSalaDisponible(new Date());
+        objectResponse.setCode((salaEntidadList.isEmpty()) ? -1 : 0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(salaEntidadList);
+        return objectResponse;
+    }
+    @Override
+    public ObjectResponse<SalaEntidad> getSalaDisponibleProfesor() {
+        ObjectResponse<SalaEntidad> objectResponse = new ObjectResponse<>();
+        List<SalaEntidad> salaEntidadList = salaRepositorio.getSalaDisponibleProfesor(new Date());
         objectResponse.setCode((salaEntidadList.isEmpty()) ? -1 : 0);
         objectResponse.setMsg("Exito!");
         objectResponse.setList(salaEntidadList);

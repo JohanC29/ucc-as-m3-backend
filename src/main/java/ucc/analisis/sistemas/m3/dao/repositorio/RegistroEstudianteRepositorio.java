@@ -55,15 +55,15 @@ public interface RegistroEstudianteRepositorio extends JpaRepository<RegistroEst
             "    s.descripcion AS SalaDescripcion,\n" +
             "    p2.id AS ProgramaID,\n" +
             "    p2.descripcion AS ProgramaDescripcion\n" +
-            "FROM REGISTROESTUDIANTE re \n" +
-            "LEFT JOIN ESTUDIANTE e ON re.idestudiante = e.id \n" +
-            "LEFT JOIN INVITADO i ON re.idinvitado = i.id \n" +
-            "LEFT JOIN EQUIPO e2 ON re.idequipo = e2.id \n" +
-            "INNER JOIN REGISTROSALA rs ON rs.id = re.idregistrosala \n" +
-            "INNER JOIN PROFESOR p ON p.id = rs.idprofesor \n" +
-            "INNER JOIN FACULTAD f ON f.id = rs.idfacultad \n" +
-            "INNER JOIN CURSO c ON c.id = rs.idcurso \n" +
-            "INNER JOIN SALA s ON s.id = rs.idsala \n" +
-            "INNER JOIN PROGRAMA p2 ON p2.id = c.idprograma;", nativeQuery = true)
+            "from registroestudiante re \n" +
+            "left join estudiante e on re.idestudiante = e.id \n" +
+            "left join invitado i on re.idinvitado = i.id \n" +
+            "left join equipo e2 on re.idequipo = e2.id \n" +
+            "inner join registrosala rs on rs.id = re.idregistrosala \n" +
+            "inner join profesor p on p.id = rs.idprofesor \n" +
+            "inner join facultad f on f.id = rs.idfacultad \n" +
+            "inner join curso c on c.id = rs.idcurso \n" +
+            "inner join sala s on s.id = rs.idsala \n" +
+            "inner join programa p2 on p2.id = c.idprograma;", nativeQuery = true)
     List<Map<String,String>> obtenerDatosCompletos();
 }

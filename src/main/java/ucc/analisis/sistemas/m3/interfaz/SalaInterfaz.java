@@ -10,6 +10,7 @@ public interface SalaInterfaz {
     ObjectResponse getSala();
 
     ObjectResponse getSalaDisponible();
+    ObjectResponse getSalaDisponibleProfesor();
 
     ObjectResponse getEquipoByIdsala(Integer idsala);
 

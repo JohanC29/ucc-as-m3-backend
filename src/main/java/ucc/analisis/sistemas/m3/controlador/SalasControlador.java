@@ -26,6 +26,11 @@ public class SalasControlador {
         return ResponseEntity.ok(salaInterfaz.getSalaDisponible());
     }
 
+    @GetMapping("/get-sala-disponible-profesor")
+    public ResponseEntity<ObjectResponse> getSalaDisponibleProfesor(){
+        return ResponseEntity.ok(salaInterfaz.getSalaDisponibleProfesor());
+    }
+
     @GetMapping("/get-equipo-by-idsala")
     public ResponseEntity<ObjectResponse> getEquipoByIdsala(@RequestParam Integer idsala){
         return ResponseEntity.ok(salaInterfaz.getEquipoByIdsala(idsala));
