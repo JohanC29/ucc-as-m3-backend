@@ -11,59 +11,41 @@ import java.util.Map;
 @Repository
 public interface RegistroEstudianteRepositorio extends JpaRepository<RegistroEstudianteEntidad, Integer> {
 
-    @Query(value = "SELECT \n" +
-            "    re.id AS RegistroEstudianteID,\n" +
-            "    re.idregistrosala AS RegistroSalaID,\n" +
-            "    re.idestudiante AS EstudianteID,\n" +
-            "    re.idequipo AS EquipoID,\n" +
-            "    re.idinvitado AS InvitadoID,\n" +
-            "    re.fechacreacion AS RegistroEstudianteFechaCreacion,\n" +
-            "    e.id AS EstudianteID,\n" +
-            "    e.documento AS EstudianteDocumento,\n" +
-            "    e.nombre AS EstudianteNombre,\n" +
-            "    e.apellido AS EstudianteApellido,\n" +
-            "    e.idprograma AS EstudianteProgramaID,\n" +
-            "    e.idsemestre AS EstudianteSemestreID,\n" +
-            "    e.idjornada AS EstudianteJornadaID,\n" +
-            "    e.estado AS EstudianteEstado,\n" +
-            "    i.id AS InvitadoID,\n" +
-            "    i.identificacion AS InvitadoIdentificacion,\n" +
-            "    i.nombre AS InvitadoNombre,\n" +
-            "    i.apellido AS InvitadoApellido,\n" +
-            "    i.idprograma AS InvitadoProgramaID,\n" +
-            "    e2.id AS EquipoID,\n" +
-            "    e2.descripcion AS EquipoDescripcion,\n" +
-            "    rs.id AS RegistroSalaID,\n" +
-            "    rs.idsala AS SalaID,\n" +
-            "    rs.idprofesor AS ProfesorID,\n" +
-            "    rs.fechainicial AS RegistroSalaFechaInicial,\n" +
-            "    rs.fechafinal AS RegistroSalaFechaFinal,\n" +
-            "    rs.idfacultad AS FacultadID,\n" +
-            "    rs.idcurso AS CursoID,\n" +
-            "    rs.fechacreacion AS RegistroSalaFechaCreacion,\n" +
-            "    p.id AS ProfesorID,\n" +
-            "    p.nombre AS ProfesorNombre,\n" +
-            "    p.apellido AS ProfesorApellido,\n" +
-            "    p.cedula AS ProfesorCedula,\n" +
-            "    p.estado AS ProfesorEstado,\n" +
-            "    f.id AS FacultadID,\n" +
-            "    f.descripcion AS FacultadDescripcion,\n" +
-            "    c.id AS CursoID,\n" +
-            "    c.descripcion AS CursoDescripcion,\n" +
-            "    c.idprograma AS CursoProgramaID,\n" +
-            "    s.id AS SalaID,\n" +
-            "    s.descripcion AS SalaDescripcion,\n" +
-            "    p2.id AS ProgramaID,\n" +
-            "    p2.descripcion AS ProgramaDescripcion\n" +
-            "from registroestudiante re \n" +
-            "left join estudiante e on re.idestudiante = e.id \n" +
-            "left join invitado i on re.idinvitado = i.id \n" +
-            "left join equipo e2 on re.idequipo = e2.id \n" +
-            "inner join registrosala rs on rs.id = re.idregistrosala \n" +
-            "inner join profesor p on p.id = rs.idprofesor \n" +
-            "inner join facultad f on f.id = rs.idfacultad \n" +
-            "inner join curso c on c.id = rs.idcurso \n" +
-            "inner join sala s on s.id = rs.idsala \n" +
-            "inner join programa p2 on p2.id = c.idprograma;", nativeQuery = true)
+    @Query(value = """
+    SELECT 
+        re.id AS RegistroEstudianteID,
+        DATE_FORMAT(re.fechacreacion, '%d-%m-%Y %H:%i:%S') AS RegistroEstudianteFechaCreacion,
+        e.documento AS EstudianteDocumento,
+        e.nombre AS EstudianteNombre,
+        e.apellido AS EstudianteApellido,
+        e.estado AS EstudianteEstado,
+        p2.descripcion AS ProgramaEstudianteDescripcion,
+        i.identificacion AS InvitadoIdentificacion,
+        i.nombre AS InvitadoNombre,
+        i.apellido AS InvitadoApellido,
+        p3.descripcion AS ProgramaInvitadoDescripcion,
+        e2.descripcion AS EquipoDescripcion,
+        DATE_FORMAT(rs.fechainicial, '%d-%m-%Y %H:%i:%S') AS RegistroSalaFechaInicial,
+        DATE_FORMAT(rs.fechafinal, '%d-%m-%Y %H:%i:%S') AS RegistroSalaFechaFinal,
+        DATE_FORMAT(rs.fechacreacion, '%d-%m-%Y %H:%i:%S') AS RegistroSalaFechaCreacion,
+        s.descripcion AS SalaDescripcion,
+        p.nombre AS ProfesorNombre,
+        p.apellido AS ProfesorApellido,
+        p.cedula AS ProfesorCedula,
+        f.descripcion AS FacultadDescripcion,
+        c.descripcion AS CursoDescripcion
+    FROM
+        registroestudiante re 
+        LEFT JOIN estudiante e ON re.idestudiante = e.id 
+        LEFT JOIN programa p2 ON e.idprograma = p2.id
+        LEFT JOIN invitado i ON re.idinvitado = i.id 
+        LEFT JOIN programa p3 ON i.idprograma = p3.id
+        LEFT JOIN equipo e2 ON re.idequipo = e2.id 
+        INNER JOIN registrosala rs ON rs.id = re.idregistrosala 
+        INNER JOIN sala s ON s.id = rs.idsala 
+        INNER JOIN profesor p ON p.id = rs.idprofesor 
+        INNER JOIN facultad f ON f.id = rs.idfacultad 
+        INNER JOIN curso c ON c.id = rs.idcurso;
+        """, nativeQuery = true)
     List<Map<String,String>> obtenerDatosCompletos();
 }

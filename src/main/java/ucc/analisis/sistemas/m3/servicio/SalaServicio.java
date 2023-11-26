@@ -11,10 +11,7 @@ import ucc.analisis.sistemas.m3.dto.response.InvitadoDto;
 import ucc.analisis.sistemas.m3.dto.response.ObjectResponse;
 import ucc.analisis.sistemas.m3.interfaz.SalaInterfaz;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class SalaServicio implements SalaInterfaz {
@@ -280,6 +277,73 @@ public class SalaServicio implements SalaInterfaz {
         objectResponse.setCode(0);
         objectResponse.setMsg("Exito!");
         return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getPrograma() {
+        ObjectResponse<Map<String,String>> objectResponse = new ObjectResponse<>();
+
+        List<ProgramaEntidad> programaEntidadList = programaRepositorio.findAll();
+        List<FacultadEntidad> facultadEntidadList = facultadRepositorio.findAll();
+
+        List<Map<String,String>> resultado = new ArrayList<>();
+
+        for (ProgramaEntidad programa: programaEntidadList) {
+            for (FacultadEntidad facultad: facultadEntidadList) {
+                if (programa.getIdfacultad() == facultad.getId()){
+                    Map<String,String> fila = new HashMap<>();
+                    fila.put("id",programa.getId().toString());
+                    fila.put("descripcion",programa.getDescripcion());
+                    fila.put("descripcionFacultad",facultad.getDescripcion());
+                    resultado.add(fila);
+                    continue;
+                }
+            }
+        }
+
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(resultado);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getSemetre() {
+        ObjectResponse<SemestreEntidad> objectResponse = new ObjectResponse<>();
+        List<SemestreEntidad> semestreEntidadList = semestreRepositorio.findAll();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(semestreEntidadList);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getJornada() {
+        ObjectResponse<JornadaEntidad> objectResponse = new ObjectResponse<>();
+        List<JornadaEntidad> jornadaEntidadList = jornadaRepositorio.findAll();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(jornadaEntidadList);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse saveEstudianteList(List<EstudianteEntidad> estudianteEntidadList) {
+        ObjectResponse<EstudianteEntidad> response = new ObjectResponse<>();
+        ArrayList<EstudianteEntidad> arrayList = new ArrayList<>();
+        for (EstudianteEntidad estudiante: estudianteEntidadList) {
+            // Validamos que el estudiante exista
+            List<EstudianteEntidad> estudianteEntidadListBuscada = estudianteRepositorio.findByDocumento(estudiante.getDocumento());
+            if (!estudianteEntidadListBuscada.isEmpty()){
+                // De no existir se actualizan los datos
+                estudiante.setId(estudianteEntidadListBuscada.get(0).getId());
+            }
+            arrayList.add(estudianteRepositorio.save(estudiante));
+        }
+        response.setList(arrayList);
+        response.setCode(0);
+        response.setMsg("Exito");
+        return response;
     }
 
 }

@@ -10,6 +10,8 @@ import ucc.analisis.sistemas.m3.dto.response.InvitadoDto;
 import ucc.analisis.sistemas.m3.dto.response.ObjectResponse;
 import ucc.analisis.sistemas.m3.interfaz.SalaInterfaz;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/salas-controller")
 public class SalasControlador {
@@ -45,7 +47,10 @@ public class SalasControlador {
     public ResponseEntity<ObjectResponse> getProgrmaByIdfacultad(@RequestParam Integer idfacultad){
         return ResponseEntity.ok(salaInterfaz.getProgramaByIdfacultad(idfacultad));
     }
-
+    @GetMapping("/get-programa")
+    public ResponseEntity<ObjectResponse> getProgrma(){
+        return ResponseEntity.ok(salaInterfaz.getPrograma());
+    }
     @GetMapping("/get-curso-by-idprograma")
     public ResponseEntity<ObjectResponse> getCursoByIdprograma(@RequestParam Integer idprograma){
         return ResponseEntity.ok(salaInterfaz.getCursoByIdprograma(idprograma));
@@ -89,5 +94,20 @@ public class SalasControlador {
     @PostMapping("/save-estudiante")
     public ResponseEntity<ObjectResponse> saveEstudiante(@RequestBody EstudianteEntidad estudianteEntidad){
         return ResponseEntity.ok(salaInterfaz.saveEstudiante(estudianteEntidad));
+    }
+
+    @GetMapping("/get-semestre")
+    public ResponseEntity<ObjectResponse> getSemestre(){
+        return ResponseEntity.ok(salaInterfaz.getSemetre());
+    }
+
+    @GetMapping("/get-jornada")
+    public ResponseEntity<ObjectResponse> getJornada(){
+        return ResponseEntity.ok(salaInterfaz.getJornada());
+    }
+
+    @PostMapping("/save-estudiante-lista")
+    public ResponseEntity<ObjectResponse> saveEstudianteList(@RequestBody List<EstudianteEntidad> estudianteEntidadList){
+        return ResponseEntity.ok(salaInterfaz.saveEstudianteList(estudianteEntidadList));
     }
 }

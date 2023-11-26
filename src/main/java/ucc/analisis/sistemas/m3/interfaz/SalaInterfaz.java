@@ -6,6 +6,8 @@ import ucc.analisis.sistemas.m3.dao.entidades.RegistroSalaEntidad;
 import ucc.analisis.sistemas.m3.dto.response.InvitadoDto;
 import ucc.analisis.sistemas.m3.dto.response.ObjectResponse;
 
+import java.util.List;
+
 public interface SalaInterfaz {
     ObjectResponse getSala();
 
@@ -35,4 +37,12 @@ public interface SalaInterfaz {
     ObjectResponse getDatosReporte();
 
     ObjectResponse saveEstudiante(EstudianteEntidad estudianteEntidad);
+
+    ObjectResponse getPrograma();
+
+    ObjectResponse getSemetre();
+
+    ObjectResponse getJornada();
+
+    ObjectResponse saveEstudianteList(List<EstudianteEntidad> estudianteEntidadList);
 }
