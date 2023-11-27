@@ -2,6 +2,7 @@ package ucc.analisis.sistemas.m3.interfaz;
 
 import ucc.analisis.sistemas.m3.dao.entidades.EstudianteEntidad;
 import ucc.analisis.sistemas.m3.dao.entidades.RegistroEstudianteEntidad;
+import ucc.analisis.sistemas.m3.dao.entidades.RegistroPortatilEntidad;
 import ucc.analisis.sistemas.m3.dao.entidades.RegistroSalaEntidad;
 import ucc.analisis.sistemas.m3.dto.response.InvitadoDto;
 import ucc.analisis.sistemas.m3.dto.response.ObjectResponse;
@@ -45,4 +46,18 @@ public interface SalaInterfaz {
     ObjectResponse getJornada();
 
     ObjectResponse saveEstudianteList(List<EstudianteEntidad> estudianteEntidadList);
+
+    ObjectResponse getUbicacion();
+
+    ObjectResponse getUsuarioByDocumento(String documento);
+
+    ObjectResponse saveRegistroPortatil(RegistroPortatilEntidad registroPortatilEntidad, Integer idMomento);
+
+    ObjectResponse getSolicitudesPendientes();
+
+    ObjectResponse getEquipoPortatilDisponible();
+
+    ObjectResponse getEquipoPortatilSinDevolver();
+
+    ObjectResponse getUsuarioListaNegra();
 }

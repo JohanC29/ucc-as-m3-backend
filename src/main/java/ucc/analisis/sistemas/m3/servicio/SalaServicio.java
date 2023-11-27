@@ -44,6 +44,16 @@ public class SalaServicio implements SalaInterfaz {
     @Autowired
     private JornadaRepositorio jornadaRepositorio;
 
+    @Autowired
+    private UbicacionRepositorio ubicacionRepositorio;
+
+    @Autowired
+    private RegistroPortatilRepositorio registroPortatilRepositorio;
+
+    @Autowired
+    private UsuarioListaNegraRepositorio usuarioListaNegraRepositorio;
+
+
     @Override
     public ObjectResponse getSala() {
         ObjectResponse<SalaEntidad> objectResponse = new ObjectResponse<>();
@@ -344,6 +354,104 @@ public class SalaServicio implements SalaInterfaz {
         response.setCode(0);
         response.setMsg("Exito");
         return response;
+    }
+
+    @Override
+    public ObjectResponse getUbicacion() {
+        ObjectResponse<UbicacionEntidad> objectResponse = new ObjectResponse<>();
+        List<UbicacionEntidad> lista = ubicacionRepositorio.findAll();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(lista);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getUsuarioByDocumento(String documento) {
+        ObjectResponse<Map<String, String>> objectResponse = new ObjectResponse<>();
+        List<Map<String, String>> objectList = registroEstudianteRepositorio.obtenerDatosUsuarios(documento);
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(objectList);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse saveRegistroPortatil(RegistroPortatilEntidad registroPortatilEntidad, Integer idMomento) {
+        ObjectResponse objectResponse = new ObjectResponse<>();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        // momento 1 - solicitud del usuario
+        // momento 2 - aprobacion y asignacion de equipo
+        // momento 3 - devolucion del equipo por el usuario
+
+        if (idMomento == 1){
+            registroPortatilEntidad.setFechasolicitud(new Date());
+            objectResponse.setObject(registroPortatilRepositorio.save(registroPortatilEntidad));
+            return objectResponse;
+        }
+
+        //Validamos si cuenta con un id
+        if (registroPortatilEntidad.getId() != null){
+            // Obtenermos el registro almacenado
+            Optional<RegistroPortatilEntidad> registro = registroPortatilRepositorio.findById(registroPortatilEntidad.getId());
+            if (registro.isPresent()){
+                RegistroPortatilEntidad resultado = registro.get();
+                if (idMomento == 2){
+                    resultado.setIdequipo(registroPortatilEntidad.getIdequipo());
+                    resultado.setUsuarioasigna(registroPortatilEntidad.getUsuarioasigna());
+                    resultado.setFechaasigna(new Date());
+                }else {
+                    resultado.setFecharegreso(new Date());
+                }
+                objectResponse.setObject(registroPortatilRepositorio.save(resultado));
+                return objectResponse;
+            }
+        }
+        objectResponse.setCode(-1);
+        objectResponse.setMsg("ERROR - NO SE ENCONTRO ID EN EL OBJETO ENVIADO!");
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getSolicitudesPendientes() {
+        ObjectResponse<Map<String,String> > objectResponse = new ObjectResponse<>();
+        List<Map<String,String>> lista = registroPortatilRepositorio.findRegistroPortatilSinEquipoYFechaAsigna();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(lista);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getEquipoPortatilDisponible() {
+        ObjectResponse<EquipoEntidad> objectResponse = new ObjectResponse<>();
+        List<EquipoEntidad> lista = equipoRepositorio.findEquipoPortatilDisponible();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(lista);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getEquipoPortatilSinDevolver() {
+        ObjectResponse<Map<String,String>> objectResponse = new ObjectResponse<>();
+        List<Map<String,String>> lista = registroPortatilRepositorio.findRegistroPortatilSinDevolver();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(lista);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getUsuarioListaNegra() {
+
+        ObjectResponse<Map<String, String>> objectResponse = new ObjectResponse<>();
+        List<Map<String, String>> objectList = usuarioListaNegraRepositorio.findAllUsuariosBloqueados();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(objectList);
+        return objectResponse;
     }
 
 }

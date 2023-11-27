@@ -2,6 +2,7 @@ package ucc.analisis.sistemas.m3.dao.repositorio;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ucc.analisis.sistemas.m3.dao.entidades.RegistroEstudianteEntidad;
 
@@ -48,4 +49,66 @@ public interface RegistroEstudianteRepositorio extends JpaRepository<RegistroEst
         INNER JOIN curso c ON c.id = rs.idcurso;
         """, nativeQuery = true)
     List<Map<String,String>> obtenerDatosCompletos();
+
+    @Query(value = """
+            SELECT  x.id
+           ,x.documento
+           ,x.nombre
+           ,x.apellido
+           ,x.programa
+           ,x.facultad
+           ,x.semestre
+           ,x.jornada
+           ,x.dependencia
+           ,x.rol
+    FROM
+    (
+            SELECT  e.id id
+    	       ,e.documento documento
+    	       ,e.nombre nombre
+    	       ,e.apellido apellido
+    	       ,p.descripcion programa
+    	       ,f.descripcion facultad
+    	       ,s.descripcion semestre
+    	       ,j.descripcion jornada
+    	       ,'' dependencia
+    	       ,'ESTUDIANTE' rol
+    	FROM estudiante e, programa p , facultad f, semestre s , jornada j
+            WHERE e.idprograma = p.id
+    	AND p
+            .idfacultad = f.id
+            AND e.idsemestre = s.id
+            AND e.idjornada = j.id
+            UNION ALL
+            SELECT  p.id id
+    	       ,p.cedula documento
+    	       ,p.nombre nombre
+    	       ,p.apellido apellido
+    	       ,'' programa
+    	       ,'' facultad
+    	       ,'' semestre
+    	       ,'' jornada
+    	       ,d.descripcion dependencia
+    	       ,'PROFESOR' rol
+    	FROM
+            profesor p, dependencia d
+            WHERE d.id = 1
+            UNION ALL
+    	SELECT  f.id id
+    	       ,f.documento documento
+    	       ,f.nombre nombre
+    	       ,f.apellido apellido
+    	       ,'' programa
+    	       ,'' facultad
+    	       ,'' semestre
+    	       ,'' jornada
+    	       ,d.descripcion dependencia
+    	       ,'FUNCIONARIO' rol
+    	FROM
+            funcionario f, dependencia d
+            WHERE f.iddependencia = d.id
+    ) x
+            WHERE x.documento = :DOCUMENTO
+    ;""", nativeQuery = true)
+    List<Map<String, String>> obtenerDatosUsuarios(@Param("DOCUMENTO")String documento);
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ucc.analisis.sistemas.m3.dao.entidades.EstudianteEntidad;
 import ucc.analisis.sistemas.m3.dao.entidades.RegistroEstudianteEntidad;
+import ucc.analisis.sistemas.m3.dao.entidades.RegistroPortatilEntidad;
 import ucc.analisis.sistemas.m3.dao.entidades.RegistroSalaEntidad;
 import ucc.analisis.sistemas.m3.dto.response.InvitadoDto;
 import ucc.analisis.sistemas.m3.dto.response.ObjectResponse;
@@ -109,5 +110,40 @@ public class SalasControlador {
     @PostMapping("/save-estudiante-lista")
     public ResponseEntity<ObjectResponse> saveEstudianteList(@RequestBody List<EstudianteEntidad> estudianteEntidadList){
         return ResponseEntity.ok(salaInterfaz.saveEstudianteList(estudianteEntidadList));
+    }
+
+    @GetMapping("/get-ubicacion")
+    public ResponseEntity<ObjectResponse> getUbicaion(){
+        return ResponseEntity.ok(salaInterfaz.getUbicacion());
+    }
+
+
+    @GetMapping("/get-usuario-by-documento")
+    public ResponseEntity<ObjectResponse> getUsuarioByDocumento(@RequestParam String documento){
+        return ResponseEntity.ok(salaInterfaz.getUsuarioByDocumento(documento));
+    }
+
+    @PostMapping("/save-registro-portatil/{idmomento}")
+    public ResponseEntity<ObjectResponse> saveRegistroPortatil(@PathVariable("idmomento") Integer idMomento, @RequestBody RegistroPortatilEntidad registroPortatilEntidad){
+        return ResponseEntity.ok(salaInterfaz.saveRegistroPortatil(registroPortatilEntidad, idMomento));
+    }
+
+    @GetMapping("/get-solicitudes-pendientes")
+    public ResponseEntity<ObjectResponse> getSolicitudesPendientes(){
+        return ResponseEntity.ok(salaInterfaz.getSolicitudesPendientes());
+    }
+    @GetMapping("/get-equipo-portatil-disponible")
+    public ResponseEntity<ObjectResponse> getEquipoPortatilDisponible(){
+        return ResponseEntity.ok(salaInterfaz.getEquipoPortatilDisponible());
+    }
+
+    @GetMapping("/get-equipo-portatil-sin-devolver")
+    public ResponseEntity<ObjectResponse> getEquipoPortatilSinDevolver(){
+        return ResponseEntity.ok(salaInterfaz.getEquipoPortatilSinDevolver());
+    }
+
+    @GetMapping("/get-usuario-lista-negra")
+    public ResponseEntity<ObjectResponse> getUsuarioListaNegra(){
+        return ResponseEntity.ok(salaInterfaz.getUsuarioListaNegra());
     }
 }
