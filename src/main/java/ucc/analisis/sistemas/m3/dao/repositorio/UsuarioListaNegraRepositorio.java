@@ -24,7 +24,7 @@ public interface UsuarioListaNegraRepositorio extends JpaRepository<UsuarioLista
            ,p.nombre
            ,p.apellido
            ,'PROFESOR' rol
-    FROM usuariolistanegra u , PROFESOR p
+    FROM usuariolistanegra u , profesor p
     WHERE u.idprofesor = p.id\s
     UNION ALL
     SELECT  u.id
@@ -32,7 +32,7 @@ public interface UsuarioListaNegraRepositorio extends JpaRepository<UsuarioLista
            ,e.nombre
            ,e.apellido
            ,'ESTUDIANTE' rol
-    FROM usuariolistanegra u , ESTUDIANTE e
+    FROM usuariolistanegra u , estudiante e
     WHERE u.idestudiante = e.id
     ;
     """, nativeQuery = true)
