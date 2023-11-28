@@ -60,4 +60,10 @@ public interface SalaInterfaz {
     ObjectResponse getEquipoPortatilSinDevolver();
 
     ObjectResponse getUsuarioListaNegra();
+
+    ObjectResponse deleteSolicutudListaNegra(Integer id,String usuario);
+
+    ObjectResponse getReporteModuloPortatiles();
+
+    ObjectResponse getDependencia();
 }

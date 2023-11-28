@@ -146,4 +146,20 @@ public class SalasControlador {
     public ResponseEntity<ObjectResponse> getUsuarioListaNegra(){
         return ResponseEntity.ok(salaInterfaz.getUsuarioListaNegra());
     }
+
+    @DeleteMapping("/delete-solicitud-lista-negra")
+    public ResponseEntity<ObjectResponse> deleteSolicutudListaNegra(@RequestParam Integer id,@RequestParam String usuario ){
+        return ResponseEntity.ok(salaInterfaz.deleteSolicutudListaNegra(id,usuario));
+    }
+
+
+    @GetMapping("/get-reporte-modulo-portatiles")
+    public ResponseEntity<ObjectResponse> getReporteModuloPortatiles(){
+        return ResponseEntity.ok(salaInterfaz.getReporteModuloPortatiles());
+    }
+
+    @GetMapping("/get-dependencia")
+    public ResponseEntity<ObjectResponse> getDependencia(){
+        return ResponseEntity.ok(salaInterfaz.getDependencia());
+    }
 }

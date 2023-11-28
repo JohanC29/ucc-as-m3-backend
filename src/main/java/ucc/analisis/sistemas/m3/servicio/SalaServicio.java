@@ -53,6 +53,9 @@ public class SalaServicio implements SalaInterfaz {
     @Autowired
     private UsuarioListaNegraRepositorio usuarioListaNegraRepositorio;
 
+    @Autowired
+    private DependenciaRepositorio dependenciaRepositorio;
+
 
     @Override
     public ObjectResponse getSala() {
@@ -451,6 +454,51 @@ public class SalaServicio implements SalaInterfaz {
         objectResponse.setCode(0);
         objectResponse.setMsg("Exito!");
         objectResponse.setList(objectList);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse deleteSolicutudListaNegra(Integer id, String usuario) {
+
+        ObjectResponse<RegistroPortatilEntidad> objectResponse = new ObjectResponse<>();
+        Optional<RegistroPortatilEntidad> portatilEntidadOptional = registroPortatilRepositorio.findById(id);
+
+        if (!portatilEntidadOptional.isPresent()){
+            objectResponse.setCode(-1);
+            objectResponse.setMsg("ERROR, REGISTRO NO ENCONTRADO!");
+            return objectResponse;
+        }
+
+        RegistroPortatilEntidad portatilEntidad = portatilEntidadOptional.get();
+        portatilEntidad.setIdequipo(-1);
+        portatilEntidad.setUsuarioasigna(usuario);
+        portatilEntidad.setFechaasigna(new Date());
+        portatilEntidad.setFecharegreso(new Date());
+        registroPortatilRepositorio.save(portatilEntidad);
+
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setObject(portatilEntidad);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getReporteModuloPortatiles() {
+        ObjectResponse<Map<String,String>> objectResponse = new ObjectResponse<>();
+        List<Map<String,String>> lista = registroPortatilRepositorio.reporteModuloPortatiles();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(lista);
+        return objectResponse;
+    }
+
+    @Override
+    public ObjectResponse getDependencia() {
+        ObjectResponse<DependenciaEntidad> objectResponse = new ObjectResponse<>();
+        List<DependenciaEntidad> lista = dependenciaRepositorio.findAll();
+        objectResponse.setCode(0);
+        objectResponse.setMsg("Exito!");
+        objectResponse.setList(lista);
         return objectResponse;
     }
 
